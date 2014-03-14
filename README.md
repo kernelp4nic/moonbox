@@ -153,7 +153,7 @@ Released under MIT License, check LICENSE file for details.
 Guys from [luarocks](http://luarocks.org/), they rock (literally)! and 
 moonbox could not live without it!
 
-To the awesome time lord @pote for [gpm](https://github.com/pote/gpm).
+To the awesome time lord [@pote](https://github.com/pote) for [gpm](https://github.com/pote/gpm).
 I took several ideas from his work.
 
-@ignacio to point me out several tips and changes. Also he is my jedi Lua master.
+[@ignacio](https://github.com/ignacio) to point me out several tips and changes. Also he is my jedi Lua master.
