@@ -8,7 +8,7 @@ cat << EOL
 SYNOPSIS
 
     moonbox will help you to manage specific versions of lua rocks for a 
-    project, it heavy relies on luarocks (http://luarocks.org/).
+    project, it heavily relies on luarocks (http://luarocks.org/).
 
     moonbox needs a configuration file to work with, if you do not have one,
     you can create a sample with 'moonbox init', otherwise, just follow
