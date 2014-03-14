@@ -3,7 +3,7 @@
 ##### Where your moon rocks live.
 
 moonbox will help you to manage specific versions of lua rocks for a 
-project, it heavy relies on [luarocks](http://luarocks.org/).
+project, it heavily relies on [luarocks](http://luarocks.org/).
 
 ![alt text](http://upload.wikimedia.org/wikipedia/commons/2/25/Y12_moon_box_for_apollo_11.jpg "Apollo 11 Moon Box")
 
