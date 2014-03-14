@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+
+boxFile="BoxFile"
+moonDir=".moonbox"
+
+usage () {
+cat << EOL
+SYNOPSIS
+
+    moonbox will help you to manage specific versions of lua rocks for a 
+    project, it heavy relies on luarocks (http://luarocks.org/).
+
+    moonbox needs a configuration file to work with, if you do not have one,
+    you can create a sample with 'moonbox init', otherwise, just follow
+    this convention:
+
+    penlight                                                   # without version, will install the lastest
+    redis-lua 2.0.4-1                                          # provide a rock version
+    gin 0.1.4-1 http://gin.io/repo                             # you can also provide a custom server
+    http://luarocks.org/repositories/rocks/uuid-0.2-1.rockspec # you can provide a rockspec url too
+    
+    moonbox comes handy when you need to have an isolated directory with
+    all your rocks dependencies, you can run 'source moonbox env enter' and this
+    will update your LUA_PATH/LUA_CPATH to work with your current directory.
+
+USAGE
+      \$ moonbox                    # Default action: 'install'.
+      \$ moonbox install            # Parses the moonbox file, installs rocks.
+      \$ moonbox init               # Create a sample moonbox file.
+
+      \$ source moonbox env         # Default action 'env show'
+      \$ source moonbox env enter   # Enters the env inside this folder.
+      \$ source moonbox env leave   # Leaves the previous configured env.
+      \$ source moonbox env show    # Show current configured env.
+
+      \$ moonbox help               # Prints this message
+      \$ moonbox version            # Show the version of moonbox
+EOL
+}
+
+write_sample (){
+  [[ -f "$boxFile" ]] && echo ">> $boxFile already exist, nothing to do." && return
+  cat >$boxFile <<EOL
+# 
+#   WARNING: This file is an example, needs to be edited
+#   in order to work with your lua rocks
+#   
+# penlight                                                   # without version, will install the lastest
+# redis-lua 2.0.4-1                                          # provide a rock version
+# gin 0.1.4-1 http://gin.io/repo                             # you can also provide a custom server
+# http://luarocks.org/repositories/rocks/uuid-0.2-1.rockspec # you can provide a rockspec url too
+EOL
+  echo ">> $boxFile successfuly created!"
+}
+
+env_script_being_sourced (){
+  if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then return 1; else return 0; fi
+}
+
+env_show (){
+  env_script_being_sourced && echo ">> moonbox env commands must be sourced first, \
+for more info run 'moonbox help'" && return
+  [[ ! -z $MOONBOX_CURRENT ]] && echo ">> env at '$MOONBOX_CURRENT'" && return
+  echo ">> could not find a moonbox env! You can start a new one with 'source moonbox env enter'"
+}
+
+env_leave (){
+  env_script_being_sourced && echo ">> moonbox env commands must be sourced first, \
+for more info run 'moonbox help'" && return
+  [[ -z $MOONBOX_CURRENT ]] && echo ">> could not find a moonbox env! \
+You can start a new one with 'source moonbox env enter'" && return
+
+  PATH=$MOONBOX_OLD_PATH
+  LUA_PATH=$MOONBOX_OLD_LUA_PATH
+  LUA_CPATH=$MOONBOX_OLD_LUA_CPATH
+  LUA_PATH_5_2=$MOONBOX_OLD_LUA_PATH_5_2
+  LUA_CPATH_5_2=$MOONBOX_OLD_LUA_CPATH_5_2
+
+  export PATH LUA_PATH LUA_CPATH LUA_PATH_5_2 LUA_CPATH_5_2
+  echo ">> env at '$MOONBOX_CURRENT' has been removed."
+  unset MOONBOX_OLD_PATH MOONBOX_OLD_LUA_CPATH MOONBOX_OLD_LUA_PATH MOONBOX_OLD_LUA_PATH_5_2 MOONBOX_OLD_LUA_CPATH_5_2 MOONBOX_CURRENT
+}
+
+env_enter (){
+  env_script_being_sourced && echo ">> moonbox env commands must be sourced first, \ 
+for more info run 'moonbox help'" && return
+  # make sure we do not have any previous env setted up
+  [[ ! -z $MOONBOX_CURRENT ]] && echo -e ">> env already setted up on: \
+'$MOONBOX_CURRENT'. \n>> Run 'moonbox env leave' to remove the env setup." && return
+
+  MOONBOX_DIR=`pwd`"/$moonDir"
+  # check for directory
+  [[ ! -d "$MOONBOX_DIR" ]] && echo ">> '$moonDir' directory not found. \
+Run 'moonbox init' first." && return
+
+  # save old paths
+  MOONBOX_OLD_PATH=$PATH
+  MOONBOX_OLD_LUA_PATH=$LUA_PATH
+  MOONBOX_OLD_LUA_CPATH=$LUA_CPATH
+  MOONBOX_OLD_LUA_PATH_5_2=$LUA_PATH_5_2
+  MOONBOX_OLD_LUA_CPATH_5_2=$LUA_CPATH_5_2
+
+  # build new paths
+  MOONBOX_CURRENT=$MOONBOX_DIR
+  LUA_PATH="$MOONBOX_CURRENT/share/lua/5.1/?.lua;$MOONBOX_CURRENT/share/lua/5.1/?/init.lua;$LUA_PATH"
+  LUA_CPATH="$MOONBOX_CURRENT/lib/lua/5.1/?.so;./?.so;$LUA_CPATH"
+  LUA_PATH_5_2="$MOONBOX_CURRENT/share/lua/5.2/?.lua;$MOONBOX_CURRENT/share/lua/5.2/?/init.lua;$LUA_PATH_5_2"
+  LUA_CPATH_5_2="$MOONBOX_CURRENT/lib/lua/5.2/?.so;./?.so;$LUA_CPATH_5_2"
+  PATH="$MOONBOX_DIR/bin":$PATH
+
+  export LUA_CPATH LUA_PATH LUA_PATH_5_2 LUA_CPATH_5_2 MOONBOX_CURRENT PATH
+  echo ">> env setted up at '$MOONBOX_CURRENT'"
+}
+
+env_handler (){
+  case "$1" in
+    show)
+      env_show ;;
+    enter)
+      env_enter ;;
+    leave)
+      env_leave ;;
+     *)
+      env_show ;;
+   esac
+}
+
+install_rocks (){
+  # check for luarocks
+  command -v luarocks >/dev/null 2>&1 || { 
+    echo >&2 "Luarocks needs to be installed to use moonbox, please check \
+  http://luarocks.org/en/Documentation"; 
+    return
+  }
+
+  [[ ! -f "$boxFile" ]] && echo ">> $boxFile file does not exist, \
+You can create an example with 'moonbox init'" && return
+  
+  # get the rocks and extra info from the moonbox file
+  rocks=$(sed 's/#.*//;/^\s*$/d' < $boxFile) || ""
+  [[ -z "$rocks" ]] && echo ">> $boxFile file seems to be empty, \
+If you already created one with 'moonbox init' needs to be edited" && return
+
+  echo ">> starting to install rocks at '"`pwd`"/$moonDir'" && echo
+  while read rock version server; do
+    # build server flag (if needed)
+    if [ -z "${server}" ]; then server_cmd=""; else server_cmd="--server=$server"; fi
+    # install the rocks inside our moonbox directory with the info parsed from our config file
+    luarocks --tree=$moonDir install $rock $version $server_cmd
+  done < <(echo "$rocks")
+
+  [[ $? != 0 ]] && echo -e "\n>> Something went wrong with the rocks install, \
+check luarocks log for details" && return
+  echo -e "\n>> installation complete!"
+}
+
+# 'moonbox install' is default action
+case "${1:-"install"}" in
+    init)
+      write_sample ;;
+    version|v)
+      echo ">> moonbox v0.1" ;;
+    install)
+      install_rocks ;;
+    env)
+      env_handler $2 ;;
+    help|h)
+      usage ;;
+    *)
+      usage ;;
+esac

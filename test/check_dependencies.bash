@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+command -v luarocks >/dev/null 2>&1 || { 
+  echo >&2 "luarocks needs to be installed to run this tests"; 
+  return
+}
+
+command -v lua >/dev/null 2>&1 || { 
+  echo >&2 "Lua needs to be installed to run this tests"; 
+  return
+}
