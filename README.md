@@ -2,8 +2,8 @@
 
 ##### Where your moon rocks live.
 
-moonbox will help you to manage specific versions of lua rocks for a 
-project, it heavily relies on [luarocks](http://luarocks.org/).
+moonbox will help you manage specific versions of lua rocks for a 
+project. It heavily relies on [luarocks](http://luarocks.org/).
 
 ![alt text](http://upload.wikimedia.org/wikipedia/commons/2/25/Y12_moon_box_for_apollo_11.jpg "Apollo 11 Moon Box")
 
@@ -33,8 +33,8 @@ The name comes from the Apollo 11 sample boxes to store moon rocks.
 
 ### BoxFile
 
-moonbox needs a configuration file to work with, if you do not have one,
-you can create a sample with `moonbox init`, otherwise, just follow this convention:
+moonbox needs a configuration file to work with. If you do not have one,
+you can create a sample one with `moonbox init`. Otherwise, just follow this convention:
 
 ```bash
 penlight                                                     # without version, will install the lastest
@@ -64,10 +64,10 @@ penlight 1.3.1-1 is now built and installed in your_project_dir/.moonbox (licens
 ### Environments
 
 moonbox comes handy when you need to have an isolated directory with
-all your rocks dependencies, you can run `source moonbox env enter` and this
-will update your LUA_PATH/LUA_CPATH to work with your current directory.
+all your rocks dependencies. You can run `source moonbox env enter` and this
+will update your LUA_PATH/LUA_CPATH environment variables to work with your current directory.
 
-As you may notice, environments commands are sourced, this means that
+As you may have noticed, environment commands are sourced. This means that
 every moonbox change will impact your current shell process.
 
 #### Environment show
@@ -77,7 +77,7 @@ every moonbox change will impact your current shell process.
 >> env at 'your_project_dir/.moonbox'
 ```
 
-#### Environment init
+#### Entering an Environment
 
 ```bash
 ➯ source moonbox env enter
@@ -88,7 +88,7 @@ Lua 5.1.5  Copyright (C) 1994-2012 Lua.org, PUC-Rio
 >
 ```
 
-#### Leaving Environment 
+#### Leaving an Environment
 
 ```bash
 ➯ source moonbox env leave
@@ -112,12 +112,12 @@ stack traceback:
 ```
 
 ## Lua versions supported (5.1, 5.2)
-If you have installed the lastest version of [luarocks](http://luarocks.org/),
+If you have installed [luarocks](http://luarocks.org/) 2.1.2 or later,
 moonbox will support both versions of Lua.
 
 ## Tests
 moonbox uses [bats](https://github.com/sstephenson/bats) to run tests.
-You can install following [this](https://github.com/sstephenson/bats#installing-bats-from-source) guide.
+You can install it following [this guide](https://github.com/sstephenson/bats#installing-bats-from-source).
 
 Once installed, run from the command line:
 
