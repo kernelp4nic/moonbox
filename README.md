@@ -37,7 +37,7 @@ moonbox needs a configuration file to work with. If you do not have one,
 you can create a sample one with `moonbox init`. Otherwise, just follow this convention:
 
 ```bash
-penlight                                                     # without version, will install the lastest
+penlight                                                     # without version, will install the latest
 redis-lua 2.0.4-1                                            # provide a rock version
 gin 0.1.4-1 http://gin.io/repo                               # you can also provide a custom server
 http://luarocks.org/repositories/rocks/uuid-0.2-1.rockspec   # you can provide a rockspec url too
