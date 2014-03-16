@@ -17,6 +17,7 @@ before_install:
       sudo add-apt-repository ppa:neomantra/luajit-v2.1 -y && sudo apt-get update -y;
     fi
   - sudo apt-get install $LUA
+  - sudo apt-get install $LUA_DEV
   - lua$LUA_SFX -v
   # Install a recent luarocks release
   - wget http://luarocks.org/releases/$LUAROCKS_BASE.tar.gz
