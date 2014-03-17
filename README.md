@@ -1,4 +1,5 @@
 # MoonBox
+[![Build Status](https://travis-ci.org/kernelp4nic/moonbox.png?branch=master)](https://travis-ci.org/kernelp4nic/moonbox)
 
 ##### Where your moon rocks live.
 
