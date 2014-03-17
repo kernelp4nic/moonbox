@@ -129,7 +129,7 @@ setup (){
     run bin/moonbox install
     run [ -d ".moonbox" ]
 
-    . bin/moonbox env enter && lua -l StackTracePlus -e "print("test")"
+    . bin/moonbox env enter && $LUA -l StackTracePlus -e "print("test")"
 }
 
 @test "'source moonbox env leave' command" {
@@ -143,6 +143,6 @@ setup (){
     run rm -rf env_status
     
     # this needs to fail
-    run lua -l StackTracePlus
+    run $LUA -l StackTracePlus
     [ "$status" -eq 1 ]
 }
