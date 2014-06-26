@@ -7,7 +7,7 @@ usage () {
 cat << EOL
 SYNOPSIS
 
-    moonbox will help you to manage specific versions of lua rocks for a 
+    moonbox will help you to manage specific versions of lua rocks for a
     project, it heavily relies on luarocks (http://luarocks.org/).
 
     moonbox needs a configuration file to work with, if you do not have one,
@@ -41,10 +41,10 @@ EOL
 write_sample (){
   [[ -f "$boxFile" ]] && echo ">> $boxFile already exist, nothing to do." && return
   cat >$boxFile <<EOL
-# 
+#
 #   WARNING: This file is an example, needs to be edited
 #   in order to work with your lua rocks
-#   
+#
 # penlight                                                   # without version, will install the latest
 # redis-lua 2.0.4-1                                          # provide a rock version
 # gin 0.1.4-1 http://gin.io/repo                             # you can also provide a custom server
@@ -82,10 +82,10 @@ You can start a new one with 'source moonbox env enter'" && return
 }
 
 env_enter (){
-  env_script_being_sourced && echo ">> moonbox env commands must be sourced first, \ 
+  env_script_being_sourced && echo ">> moonbox env commands must be sourced first, \
 for more info run 'moonbox help'" && return
-  # make sure we do not have any previous env setted up
-  [[ ! -z $MOONBOX_CURRENT ]] && echo -e ">> env already setted up on: \
+  # make sure we do not have any previous env set up
+  [[ ! -z $MOONBOX_CURRENT ]] && echo -e ">> env already set up on: \
 '$MOONBOX_CURRENT'. \n>> Run 'moonbox env leave' to remove the env setup." && return
 
   MOONBOX_DIR=`pwd`"/$moonDir"
@@ -127,9 +127,9 @@ env_handler (){
 
 install_rocks (){
   # check for luarocks
-  command -v luarocks >/dev/null 2>&1 || { 
+  command -v luarocks >/dev/null 2>&1 || {
     echo >&2 "Luarocks needs to be installed to use moonbox, please check \
-  http://luarocks.org/en/Documentation"; 
+  http://luarocks.org/en/Documentation";
     return
   }
 
