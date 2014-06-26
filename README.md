@@ -23,6 +23,14 @@ The name comes from the Apollo 11 sample boxes to store moon rocks.
 
 ## Installing
 
+### Via LuaRocks:
+
+```bash
+➯ luarocks install https://raw.githubusercontent.com/kernelp4nic/moonbox/master/moonbox-0.1-1.rockspec
+```
+
+### Manual:
+
 ```bash
 ➯ git clone https://github.com/kernelp4nic/moonbox
 ➯ cd moonbox
